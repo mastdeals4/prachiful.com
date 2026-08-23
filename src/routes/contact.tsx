@@ -1,0 +1,308 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Facebook, Instagram, MapPin, MessageCircle, Youtube, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { PageHero } from "@/components/prachi/PageHero";
+import { MotionSection } from "@/components/prachi/Motion";
+import { CelestialDecor } from "@/components/prachi/CelestialDecor";
+import { cities, services, socialLinks, whatsappUrl, whatsappNumber, contactEmail } from "@/components/prachi/site-data";
+
+
+export const Route = createFileRoute("/contact")({
+  head: () => ({
+    meta: [
+      { title: "Contact Prachi Fulfagar | Book a Consultation" },
+      { name: "description", content: "Book a Vastu, Palmistry or Astrology consultation with Prachi Fulfagar. Offices in Nashik, Pune, Mumbai and Kopargaon. Remote sessions available worldwide." },
+      { property: "og:title", content: "Contact Prachi Fulfagar" },
+      { property: "og:description", content: "Book a Vastu, Palmistry or Astrology consultation with Prachi Fulfagar — in person across India, or online worldwide." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://prachifulfagar.com/contact" },
+      { name: "twitter:title", content: "Contact Prachi Fulfagar" },
+      { name: "twitter:description", content: "Book a Vastu, Palmistry or Astrology consultation with Prachi Fulfagar — in person across India, or online worldwide." },
+    ],
+    links: [{ rel: "canonical", href: "https://prachifulfagar.com/contact" }],
+  }),
+  component: ContactPage,
+});
+
+// ── Form schema ───────────────────────────────────────────────
+const formSchema = z
+  .object({
+    full_name: z.string().min(2, "Please enter your name"),
+    email: z.string().email("Please enter a valid email").or(z.literal("")),
+    phone: z.string().min(6, "Please enter a valid phone number").or(z.literal("")),
+    city_country: z.string().optional(),
+    service_interested: z.string().optional(),
+    preferred_mode: z.enum(["In-person", "Remote", "Home Visit"]).optional(),
+    message: z.string().optional(),
+  })
+  .refine((d) => d.email || d.phone, {
+    message: "Please provide at least an email or phone number",
+    path: ["email"],
+  });
+
+type FormData = z.infer<typeof formSchema>;
+
+function ContactPage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="CONTACT"
+        title="Let's talk — book your consultation"
+        copy="In-person across India, or online from anywhere in the world."
+      />
+      <MotionSection className="pf-section pf-celestial-section bg-background pt-10">
+        <CelestialDecor
+          variant="sun"
+          className="pointer-events-none absolute -right-12 top-16 hidden h-56 w-56 text-accent/10 lg:block"
+        />
+        <CelestialDecor
+          variant="star"
+          className="pointer-events-none absolute left-8 bottom-12 hidden h-24 w-24 text-accent/12 lg:block"
+        />
+        <div className="pf-container relative z-10 grid gap-14 lg:grid-cols-[1fr_.9fr] lg:gap-[60px]">
+          <ContactForm />
+          <ContactAside />
+        </div>
+      </MotionSection>
+    </>
+  );
+}
+
+function ContactForm() {
+  const [submitted, setSubmitted] = useState(false);
+  const [serverError, setServerError] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { preferred_mode: "Remote" },
+  });
+
+  const onSubmit = async (data: FormData) => {
+    setServerError("");
+    try {
+      const lines = [
+        `Hi Prachi, I would like to book a consultation.`,
+        ``,
+        `Name: ${data.full_name}`,
+        data.email ? `Email: ${data.email}` : null,
+        data.phone ? `Phone: ${data.phone}` : null,
+        data.city_country ? `City / Country: ${data.city_country}` : null,
+        data.service_interested ? `Service: ${data.service_interested}` : null,
+        data.preferred_mode ? `Preferred Mode: ${data.preferred_mode}` : null,
+        data.message ? `\nMessage:\n${data.message}` : null,
+      ].filter(Boolean).join("\n");
+
+      const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines)}`;
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setServerError("Couldn't open WhatsApp. Please message Prachi directly.");
+    }
+  };
+
+  const inputClass =
+    "w-full rounded-lg border border-border bg-background px-4 py-[13px] text-[13px] font-light text-foreground outline-none transition focus:border-accent focus:shadow-[0_0_0_3px_rgb(232_160_32_/_0.1)]";
+  const errorClass = "mt-1 text-[11px] text-red-500";
+  const labelClass = "mb-1.5 block text-[11px] font-medium tracking-[0.5px] text-muted-foreground";
+
+  if (submitted) {
+    return (
+      <div className="pf-card flex flex-col items-center justify-center rounded-2xl p-12 text-center">
+        <CheckCircle2 className="h-10 w-10 text-accent" />
+        <h2 className="pf-h3 mt-6">
+          Thank you, <span className="text-accent">{watch("full_name").split(" ")[0]}</span>
+        </h2>
+        <p className="pf-body mt-3 max-w-sm">
+          WhatsApp should have opened in a new tab with your details. Just hit send and Prachi will reply within a few hours.
+        </p>
+        <Button asChild variant="whatsapp" className="mt-8">
+          <a href={whatsappUrl} target="_blank" rel="noreferrer">
+            Open WhatsApp again
+          </a>
+        </Button>
+        <a
+          href={`mailto:${contactEmail}?subject=Consultation%20enquiry%20from%20${encodeURIComponent(watch("full_name"))}`}
+          className="mt-4 text-[12px] text-muted-foreground underline-offset-4 hover:underline"
+        >
+          Prefer email? Write to {contactEmail}
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <form className="pf-card rounded-2xl p-9" onSubmit={handleSubmit(onSubmit)}>
+      <h2 className="pf-h3 mb-7">Send a message</h2>
+      <div className="grid gap-5">
+        {/* Name */}
+        <div>
+          <label className={labelClass}>Full Name *</label>
+          <input {...register("full_name")} type="text" placeholder="Your full name" className={inputClass} />
+          {errors.full_name && <p className={errorClass}>{errors.full_name.message}</p>}
+        </div>
+
+        {/* Email + Phone in a row */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className={labelClass}>Email Address</label>
+            <input {...register("email")} type="email" placeholder="your@email.com" className={inputClass} />
+            {errors.email && <p className={errorClass}>{errors.email.message}</p>}
+          </div>
+          <div>
+            <label className={labelClass}>Phone / WhatsApp</label>
+            <input {...register("phone")} type="tel" placeholder="+91 or international" className={inputClass} />
+            {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
+          </div>
+        </div>
+
+        {/* City */}
+        <div>
+          <label className={labelClass}>City / Country</label>
+          <input
+            {...register("city_country")}
+            type="text"
+            placeholder="e.g. Mumbai, Dubai, London"
+            className={inputClass}
+          />
+        </div>
+
+        {/* Service */}
+        <div>
+          <label className={labelClass}>Service Interested In</label>
+          <select {...register("service_interested")} className={inputClass}>
+            <option value="">Select a service...</option>
+            {services.map((s) => (
+              <option key={s.slug} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+            <option value="Not sure — general enquiry">Not sure — general enquiry</option>
+          </select>
+        </div>
+
+        {/* Preferred mode */}
+        <div>
+          <label className={labelClass}>Preferred Mode</label>
+          <div className="flex flex-wrap gap-4 text-[13px] text-foreground">
+            {(["In-person", "Remote", "Home Visit"] as const).map((mode) => (
+              <label key={mode} className="flex cursor-pointer items-center gap-2">
+                <input
+                  {...register("preferred_mode")}
+                  type="radio"
+                  value={mode}
+                  className="accent-[var(--color-accent)]"
+                />
+                {mode}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Message */}
+        <div>
+          <label className={labelClass}>Message (optional)</label>
+          <textarea
+            {...register("message")}
+            rows={4}
+            placeholder="Tell Prachi a little about what you're looking for..."
+            className={inputClass}
+          />
+        </div>
+
+        {/* Server error */}
+        {serverError && <div className="rounded-lg bg-red-50 px-4 py-3 text-[13px] text-red-600">{serverError}</div>}
+
+        <Button type="submit" variant="hero" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? "Opening WhatsApp..." : "Send via WhatsApp"}
+        </Button>
+
+        <p className="text-center text-[11px] text-muted-foreground">
+          Or reach Prachi directly on{" "}
+          <a href={whatsappUrl} target="_blank" rel="noreferrer" className="font-medium text-[#22C55E] hover:underline">
+            WhatsApp
+          </a>
+        </p>
+      </div>
+    </form>
+  );
+}
+
+function ContactAside() {
+  return (
+    <aside>
+      <h2 className="font-heading text-[28px] font-light text-foreground">How to reach Prachi</h2>
+      <div className="mt-8">
+        {cities.map((city) => {
+          let detail: React.ReactNode;
+          switch (city) {
+            case "Mumbai":
+              detail = "Office space · By appointment";
+              break;
+            case "Pune":
+              detail = "Office space in Baner · By appointment";
+              break;
+            case "Nashik":
+              detail = "Primary office : 202, V N Pledge, Manik Nagar, Nashik : 422013";
+              break;
+            case "Kopargaon":
+              detail = (
+                <>
+                  Regional office : Gokul Nagri, Kopargaon
+                  <br />
+                  <strong className="font-semibold text-foreground">Travels all over India on request</strong>
+                </>
+              );
+              break;
+            default:
+              detail = null;
+          }
+          return (
+            <div key={city} className="flex gap-4 border-b border-border py-4">
+              <MapPin className="mt-1 h-4 w-4 flex-shrink-0 text-accent" />
+              <div>
+                <p className="text-[13px] font-medium text-foreground">{city}</p>
+                <p className="mt-0.5 text-[11px] text-muted-foreground">{detail}</p>
+              </div>
+            </div>
+          );
+        })}
+        <p className="mt-4 text-[12px] italic text-muted-foreground">
+          Remote consultations available worldwide — via Zoom, WhatsApp or phone.
+        </p>
+      </div>
+
+      <div className="mt-9 rounded-xl border border-border bg-warm p-6">
+        <MessageCircle className="h-6 w-6 text-[#22C55E]" />
+        <p className="mt-3 text-sm font-medium text-foreground">Chat on WhatsApp</p>
+        <p className="mt-1 text-[11px] text-muted-foreground">Typically responds within a few hours</p>
+        <Button asChild variant="whatsapp" className="mt-4 w-full">
+          <a href={whatsappUrl} target="_blank" rel="noreferrer">
+            Open WhatsApp
+          </a>
+        </Button>
+      </div>
+
+      <div className="mt-8 flex gap-5 text-muted-foreground">
+        <a href={socialLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
+          <Instagram className="h-[18px] w-[18px] transition hover:text-accent" />
+        </a>
+        <a href={socialLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube">
+          <Youtube className="h-[18px] w-[18px] transition hover:text-accent" />
+        </a>
+        <a href={socialLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
+          <Facebook className="h-[18px] w-[18px] transition hover:text-accent" />
+        </a>
+      </div>
+    </aside>
+  );
+}

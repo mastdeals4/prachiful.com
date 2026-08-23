@@ -1,0 +1,192 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { MapPin, MessageCircle } from "lucide-react";
+import palmBadge from "@/assets/palm-badge.png";
+import celestialPalmImage from "@/assets/new-celestial-palm.webp";
+import { Button } from "@/components/ui/button";
+import { PageHero } from "@/components/prachi/PageHero";
+import { MotionSection, SectionIntro } from "@/components/prachi/Motion";
+import { CelestialDecor, DoubleLineMark } from "@/components/prachi/CelestialDecor";
+import { awards, cities, globalPresence, whatsappUrl } from "@/components/prachi/site-data";
+
+// celestialPalmImage imported from @/assets/new-celestial-palm.webp
+const prachiPortraitImage = "/site-images/prachi-fulfagar-portrait.jpg";
+
+export const Route = createFileRoute("/about")({
+  head: () => ({
+    meta: [
+      { title: "About Prachi Fulfagar | Vastu & Palmistry Consultant" },
+      { name: "description", content: "Learn about Prachi Fulfagar's two-decade practice and international recognition in Vastu and Palmistry." },
+      { property: "og:title", content: "About Prachi Fulfagar" },
+      { property: "og:description", content: "A rare combination of Palmistry and Vastu Shastra, guided with modern clarity." },
+      { property: "og:type", content: "profile" },
+      { property: "og:url", content: "https://prachifulfagar.com/about" },
+      { name: "twitter:title", content: "About Prachi Fulfagar" },
+      { name: "twitter:description", content: "A rare combination of Palmistry and Vastu Shastra, guided with modern clarity." },
+    ],
+    links: [{ rel: "canonical", href: "https://prachifulfagar.com/about" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Prachi Fulfagar",
+          url: "https://prachifulfagar.com/about",
+          image: "https://prachifulfagar.com/site-images/prachi-fulfagar-portrait.jpg",
+          jobTitle: "Vastu, Palmistry & Vedic Astrology Consultant",
+          description: "Internationally awarded consultant integrating Vastu Shastra, Palmistry and Vedic Astrology, with 20+ years of practice and 5,000+ clients across India and internationally.",
+          worksFor: { "@id": "https://prachifulfagar.com/#organization" },
+          knowsAbout: ["Vastu Shastra", "Palmistry", "Vedic Astrology", "Pyramidology", "Energy Balancing"],
+          award: [
+            "Indo-Thailand Jyotish Puraskar",
+            "Indo-Thailand Vastu Brihaspati Award",
+            "International Astro Purohit Award",
+            "Certified Medical Astrological Proficiency",
+            "Honorary Doctorate, Thailand",
+          ],
+          sameAs: [
+            "https://www.instagram.com/prachifulfagar/",
+            "https://www.facebook.com/prachi.fulfagar",
+            "https://www.youtube.com/@prachifulfagar6709",
+          ],
+        }),
+      },
+    ],
+  }),
+  component: AboutPage,
+});
+
+function AboutPage() {
+  return <>
+    <PageHero eyebrow="ABOUT" title="Where ancient wisdom meets modern clarity" copy="A rare combination of Palmistry and Vastu Shastra — personally guided." />
+    <MotionSection className="pf-section pf-celestial-section overflow-hidden bg-card">
+      <CelestialDecor variant="compass" className="pointer-events-none absolute -left-12 top-12 hidden h-52 w-52 text-accent/10 lg:block" />
+      <CelestialDecor variant="moon" className="pointer-events-none absolute right-10 bottom-10 hidden h-32 w-32 text-accent/12 lg:block" />
+      <div className="pf-container relative z-10 grid items-center gap-10 lg:grid-cols-[31fr_38fr_31fr]">
+        <div className="pf-about-portrait-wrap relative mx-auto min-h-[440px] w-full max-w-[320px]">
+          <span className="pf-about-arch-orbit pf-about-arch-orbit-outer" aria-hidden="true" />
+          <span className="pf-about-arch-orbit pf-about-arch-orbit-inner" aria-hidden="true" />
+          <div className="pf-about-image-frame pf-about-image-arch absolute inset-x-0 top-0 mx-auto h-[430px] w-[88%]">
+            <img src={prachiPortraitImage} alt="Prachi Fulfagar in her Vastu and Palmistry consultation studio" width={900} height={1350} loading="lazy" decoding="async" className="h-full w-full object-cover object-[center_8%]" />
+          </div>
+        </div>
+        <div className="text-center">
+          <DoubleLineMark className="mx-auto mb-7 w-[250px] text-accent/55" />
+          <p className="pf-eyebrow pf-eyebrow-center">HER STORY</p>
+          <h2 className="pf-h2 mt-7">Two decades. One rare combination.</h2>
+          <p className="pf-body mx-auto mt-5 max-w-[430px]">Prachi Fulfagar began her journey into Palmistry more than two decades ago — drawn not by theory, but by an early recognition that the lines on a hand tell a story most people never get to hear clearly. Over time, that curiosity deepened into a full practice combining Palmistry, Vastu Shastra and Vedic Astrology — three disciplines that, together, can address a person from the inside out.</p>
+          <p className="pf-body mx-auto mt-4 max-w-[430px]">What makes Prachi's practice distinctive is not just the combination — it is the integration. A home that is Vastu-aligned but out of step with its owner's personal energy will still feel off. Reading both together, Prachi can identify what is actually creating the friction — and what will actually correct it.</p>
+          <p className="pf-body mx-auto mt-4 max-w-[430px]">Today she consults from offices in Mumbai, Pune, Nashik and Kopargaon, and works with clients across India and internationally — from professionals navigating career crossroads to families who simply want their home to feel more like home.</p>
+        </div>
+        <div className="pf-about-side-wrap relative min-h-[440px]">
+          <img src={celestialPalmImage} alt="Palmistry consultation details in warm light" width={1120} height={1328} loading="lazy" decoding="async" className="absolute inset-x-0 bottom-0 mx-auto h-[360px] w-[88%] rounded-b-full border border-accent/20 object-cover p-1.5 shadow-card" />
+          <div className="absolute left-1/2 top-0 grid h-28 w-28 -translate-x-1/2 place-items-center rounded-t-full border border-border bg-background text-accent shadow-card"><img src={palmBadge} alt="" width={48} height={48} loading="lazy" className="h-12 w-12 object-contain" /></div>
+        </div>
+      </div>
+    </MotionSection>
+    <MotionSection className="pf-section pf-celestial-section bg-background">
+      <CelestialDecor variant="sun" className="pointer-events-none absolute -right-10 top-10 hidden h-48 w-48 text-accent/10 lg:block" />
+      <div className="pf-container relative z-10">
+        <SectionIntro eyebrow="INTERNATIONAL RECOGNITION" title="Awards, authority and global presence" />
+        <div className="mt-10 grid gap-4 lg:grid-cols-[0.92fr_1.65fr]">
+          {awards.slice(0, 1).map((award, index) => {
+            const Icon = award.icon;
+            return <article key={award.title} className="pf-card overflow-hidden">
+              <div className="grid aspect-[3/4] place-items-center bg-card-soft p-3">
+                <img src={award.image} alt={`${award.title} certificate`} width={800} height={1067} loading="lazy" decoding="async" className="max-h-full w-full object-contain" />
+              </div>
+              <div className="p-5">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-badge text-accent"><Icon size={16} strokeWidth={1.6} /></div>
+                  <p className="text-[9px] font-medium uppercase tracking-[2px] text-accent">AWARD 0{index + 1}</p>
+                </div>
+                <h3 className="pf-h3 mt-4 text-[22px]">{award.title}</h3>
+                <p className="mt-2 text-[12px] font-light leading-relaxed text-muted-foreground">{award.description}</p>
+              </div>
+            </article>;
+          })}
+          <div className="grid gap-4 md:grid-cols-2">
+            {awards.slice(1).map((award, index) => {
+              const Icon = award.icon;
+              return <article key={award.title} className="pf-card overflow-hidden">
+                <div className="grid aspect-[16/10] place-items-center bg-card-soft p-3">
+                  <img src={award.image} alt={`${award.title} certificate`} width={900} height={563} loading="lazy" decoding="async" className="max-h-full w-full object-contain" />
+                </div>
+                <div className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-badge text-accent"><Icon size={15} strokeWidth={1.6} /></div>
+                    <p className="text-[9px] font-medium uppercase tracking-[2px] text-accent">AWARD 0{index + 2}</p>
+                  </div>
+                  <h3 className="pf-h3 mt-3 text-[20px]">{award.title}</h3>
+                  <p className="mt-1.5 text-[12px] font-light leading-relaxed text-muted-foreground">{award.description}</p>
+                </div>
+              </article>;
+            })}
+          </div>
+        </div>
+        <div className="mt-8 flex flex-wrap justify-center gap-2.5">
+          {globalPresence.map((place) => <span key={place} className="rounded-full border border-border bg-card px-4 py-2 text-[11px] text-muted-foreground">{place}</span>)}
+        </div>
+      </div>
+    </MotionSection>
+    <MotionSection className="pf-section bg-background">
+      <div className="pf-container relative z-10">
+        <SectionIntro eyebrow="MOMENTS & MILESTONES" title="From the practice" />
+        <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { src: "/site-images/gallery/gallery-1.jpg", alt: "Prachi Fulfagar presenting Vastu Visharad certificates to students" },
+            { src: "/site-images/gallery/award-ceremony.jpg", alt: "Prachi Fulfagar at an international award ceremony" },
+            { src: "/site-images/gallery/gallery-2.jpg", alt: "Prachi Fulfagar with awarded Vastu course graduates" },
+            { src: "/site-images/gallery/gallery-3.jpg", alt: "Vastu workshop participants receiving certificates from Prachi Fulfagar" },
+            { src: "/site-images/gallery/prachi-fulfagar-award.jpg", alt: "Prachi Fulfagar receiving a prestigious recognition" },
+            { src: "/site-images/gallery/gallery-4.jpg", alt: "Prachi Fulfagar honouring a Destiny Designers programme graduate" },
+            { src: "/site-images/gallery/gallery-6.jpg", alt: "Moment from a Prachi Fulfagar consultation event" },
+            { src: "/site-images/gallery/award.jpg", alt: "Prachi Fulfagar at an international felicitation event" },
+            { src: "/site-images/gallery/gallery-7.jpg", alt: "Prachi Fulfagar with clients at a Vastu workshop" },
+            { src: "/site-images/gallery/gallery-8.jpg", alt: "Prachi Fulfagar conducting an in-person consultation session" },
+            { src: "/site-images/gallery/gallery-10.jpg", alt: "Group photograph from a Prachi Fulfagar masterclass" },
+            { src: "/site-images/gallery/gallery-9.jpg", alt: "Prachi Fulfagar guiding a Vastu Visharad student" },
+            { src: "/site-images/gallery/gallery-11.jpg", alt: "Prachi Fulfagar with awardees from her Destiny Designers initiative" },
+          ].map((item) => (
+            <figure key={item.src} className="aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-card-soft">
+              <img src={item.src} alt={item.alt} loading="lazy" decoding="async" className="h-full w-full object-cover transition duration-700 hover:scale-[1.03]" />
+            </figure>
+          ))}
+        </div>
+        <p className="mt-6 text-center text-[12px] font-light italic text-muted-foreground">More moments from the practice — updated regularly.</p>
+      </div>
+    </MotionSection>
+    <MotionSection className="pf-section pf-celestial-section bg-card">
+      <CelestialDecor variant="star" className="pointer-events-none absolute left-10 top-14 hidden h-24 w-24 text-accent/12 lg:block" />
+      <div className="pf-container relative z-10 text-center">
+        <SectionIntro eyebrow="OFFICES" title="Where you can find Prachi" />
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {cities.map((city) => {
+            const detail =
+              city === "Mumbai" ? "By appointment — contact for address" :
+              city === "Pune" ? "Office in Baner · By appointment" :
+              city === "Nashik" ? "202, V N Pledge, Manik Nagar, Nashik 422013" :
+              city === "Kopargaon" ? "Gokul Nagri, Kopargaon" : "";
+            return <article key={city} className="rounded-xl border border-border bg-card-soft p-7 text-center">
+              <MapPin className="mx-auto h-5 w-5 text-accent" />
+              <h3 className="pf-h3 mt-3 text-[22px]">{city}</h3>
+              <p className="mt-1 text-[11px] text-muted-foreground">{detail}</p>
+              {city === "Kopargaon" && <p className="mt-1.5 text-[10px] text-accent">+ travels all over India on request</p>}
+            </article>;
+          })}
+        </div>
+        <p className="mt-9 font-heading text-base italic text-muted-foreground">Remote consultations available worldwide — via Zoom, WhatsApp or phone.</p>
+      </div>
+    </MotionSection>
+    <MotionSection className="pf-section bg-warm">
+      <div className="pf-container relative z-10 text-center">
+        <h2 className="pf-h2">Ready to work with Prachi?</h2>
+        <p className="pf-body mx-auto mt-4 max-w-xl">Book your first consultation — in person or online.</p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3.5">
+          <Button asChild variant="hero"><Link to="/contact">Book a Consultation</Link></Button>
+          <Button asChild variant="porcelain"><a href={whatsappUrl} target="_blank" rel="noreferrer"><MessageCircle className="text-whatsapp" />WhatsApp Prachi</a></Button>
+        </div>
+      </div>
+    </MotionSection>
+  </>;
+}
